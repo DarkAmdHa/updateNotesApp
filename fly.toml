@@ -1,0 +1,43 @@
+# fly.toml file generated for update-notes-app on 2023-03-17T19:04:47+05:00
+
+app = "update-notes-app"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[env]
+PORT = "8081"
+HOST = "https://update-notes-app.fly.dev"
+SHOPIFY_API_KEY = "356457c16d258597a63752faa1fe4297"
+SCOPES = "write_orders,read_products,write_products"
+POSTGRES_PATH="postgres://postgres:SjIs9h2GgcQoTlz@update-notes-app-db.flycast:5432"
+
+
+[experimental]
+  auto_rollback = true
+
+[[services]]
+  http_checks = []
+  internal_port = 8081
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
